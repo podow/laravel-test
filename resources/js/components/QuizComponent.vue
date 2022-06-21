@@ -2,6 +2,7 @@
   <el-container class="container">
     <div class="question__list m-auto">
 
+      <!-- Отображение вопросов в цикле -->
       <el-card
         class="question__item mb-3"
         v-for="(question, idx) in questions"
@@ -12,6 +13,8 @@
           <span>{{question.title}}</span>
         </div>
         <div class="d-flex flex-column">
+
+          <!-- Отображение варинтов ответа в цикле -->
           <div v-for="option in question.options" :key="option.id">
             <el-radio
               :label="option.id"
@@ -21,6 +24,8 @@
               class="text-wrap mb-3"
             >{{option.title}}
             </el-radio>
+
+            <!-- Проверка есть ли текстовое поле у варинта и он выбран -->
             <el-input
               v-if="hasText && selected[current].selected == option.id"
               v-model="selected[idx].text"
@@ -44,13 +49,16 @@
     name: "QuizComponent",
     data() {
       return {
-        questions: [],
-        selected: [],
-        current: 0,
-        hasText: false
+        questions: [], // вопросы
+        selected: [], // выбранные варинты ответа
+        current: 0, // текущий вопрос для отображения на странице
+        hasText: false // наличие текстового поля
       }
     },
     methods: {
+      /**
+       * Запрос вопрос с вариантами ответа через api
+       */
       getQuestions() {
         axios.get('/api/question')
           .then((response) => {
@@ -62,14 +70,21 @@
             }));
           });
       },
+
+      /**
+       * Переключение на следующий вопрос
+       */
       next: function () {
+        // Если у выбраного варианта есть текстовое поле и оно пустое, отдаем ошибку пользователю
         if (this.hasText && !this.selected[this.current].text) {
           this.$notify.error({
             title: 'Ошибка',
             message: 'Пожалуйста введите текст ответа'
           });
+        // Если выбран вариант и нет текстового поля пропусаем дальше
         } else if (this.selected[this.current].selected) {
           this.current++;
+        // Если не выбран вариант, отдаем ошибку пользователю
         } else {
           this.$notify.error({
             title: 'Ошибка',
@@ -77,12 +92,25 @@
           });
         }
       },
+
+      /**
+       * Переключение на предыдущий вопрос вопрос
+       */
       prev: function () {
         this.current--;
       },
+
+      /**
+       * Окончание опроса
+       */
       finish: function () {
         console.log('done!');
       },
+
+      /**
+       * Проверка на наличие текстового поля при выборе варианта ответа
+       * @param hasText
+       */
       checkText: function (hasText) {
         this.hasText = hasText;
       }

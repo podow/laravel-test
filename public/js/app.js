@@ -7078,17 +7078,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "QuizComponent",
   data: function data() {
     return {
       questions: [],
+      // вопросы
       selected: [],
+      // выбранные варинты ответа
       current: 0,
-      hasText: false
+      // текущий вопрос для отображения на странице
+      hasText: false // наличие текстового поля
+
     };
   },
   methods: {
+    /**
+     * Запрос вопрос с вариантами ответа через api
+     */
     getQuestions: function getQuestions() {
       var _this = this;
 
@@ -7104,14 +7116,19 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+
+    /**
+     * Переключение на следующий вопрос
+     */
     next: function next() {
+      // Если у выбраного варианта есть текстовое поле и оно пустое, отдаем ошибку пользователю
       if (this.hasText && !this.selected[this.current].text) {
         this.$notify.error({
           title: 'Ошибка',
           message: 'Пожалуйста введите текст ответа'
-        });
+        }); // Если выбран вариант и нет текстового поля пропусаем дальше
       } else if (this.selected[this.current].selected) {
-        this.current++;
+        this.current++; // Если не выбран вариант, отдаем ошибку пользователю
       } else {
         this.$notify.error({
           title: 'Ошибка',
@@ -7119,12 +7136,25 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
+
+    /**
+     * Переключение на предыдущий вопрос вопрос
+     */
     prev: function prev() {
       this.current--;
     },
+
+    /**
+     * Окончание опроса
+     */
     finish: function finish() {
       console.log('done!');
     },
+
+    /**
+     * Проверка на наличие текстового поля при выборе варианта ответа
+     * @param hasText
+     */
     checkText: function checkText(hasText) {
       this.hasText = hasText;
     }

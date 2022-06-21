@@ -5,6 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Наполнение таблицы вопросов
+ *
+ * @package Database\Seeders
+ */
 class QuestionSeeder extends Seeder
 {
     /**

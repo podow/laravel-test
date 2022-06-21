@@ -9,6 +9,11 @@ use Illuminate\Http\Response;
 
 class QuestionController extends Controller
 {
+    /**
+     * Отдача всех вопросов с варинтами через json
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         return response()->json([

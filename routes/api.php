@@ -18,4 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Путь к апи для поллучения вопросов с вариантами ответа
 Route::get('/question', [\App\Http\Controllers\Api\QuestionController::class, 'index']);

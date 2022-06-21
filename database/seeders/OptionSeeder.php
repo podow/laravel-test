@@ -5,6 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Наполнение таблицы вариантов ответа связанных с вопросами
+ *
+ * @package Database\Seeders
+ */
 class OptionSeeder extends Seeder
 {
     /**
