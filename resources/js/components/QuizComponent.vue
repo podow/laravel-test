@@ -17,10 +17,16 @@
               :label="option.id"
               v-bind:name="'option_' + question.id"
               v-model="selected[idx].selected"
+              v-on:change="checkText(!!option.has_text)"
               class="text-wrap mb-3"
             >{{option.title}}
             </el-radio>
-            <el-input v-if="option.has_text && selected[current].selected == option.id" type="textarea"></el-input>
+            <el-input
+              v-if="hasText && selected[current].selected == option.id"
+              v-model="selected[idx].text"
+              type="textarea"
+              class="mb-3"
+            ></el-input>
           </div>
         </div>
         <div class="text-end">
@@ -41,6 +47,7 @@
         questions: [],
         selected: [],
         current: 0,
+        hasText: false
       }
     },
     methods: {
@@ -48,11 +55,20 @@
         axios.get('/api/question')
           .then((response) => {
             this.questions = response.data.data;
-            this.selected = response.data.data.map(({ id }) => ({ questionId: id, selected: 0, text: null }));
+            this.selected = response.data.data.map(({id}) => ({
+              questionId: id,
+              selected: 0,
+              text: null
+            }));
           });
       },
-      next: function() {
-        if (this.selected[this.current].selected) {
+      next: function () {
+        if (this.hasText && !this.selected[this.current].text) {
+          this.$notify.error({
+            title: 'Ошибка',
+            message: 'Пожалуйста введите текст ответа'
+          });
+        } else if (this.selected[this.current].selected) {
           this.current++;
         } else {
           this.$notify.error({
@@ -61,11 +77,14 @@
           });
         }
       },
-      prev: function() {
+      prev: function () {
         this.current--;
       },
-      finish: function() {
+      finish: function () {
         console.log('done!');
+      },
+      checkText: function (hasText) {
+        this.hasText = hasText;
       }
     },
     created() {

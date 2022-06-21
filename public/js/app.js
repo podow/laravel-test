@@ -7072,13 +7072,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "QuizComponent",
   data: function data() {
     return {
       questions: [],
       selected: [],
-      current: 0
+      current: 0,
+      hasText: false
     };
   },
   methods: {
@@ -7098,7 +7105,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     next: function next() {
-      if (this.selected[this.current].selected) {
+      if (this.hasText && !this.selected[this.current].text) {
+        this.$notify.error({
+          title: 'Ошибка',
+          message: 'Пожалуйста введите текст ответа'
+        });
+      } else if (this.selected[this.current].selected) {
         this.current++;
       } else {
         this.$notify.error({
@@ -7112,6 +7124,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     finish: function finish() {
       console.log('done!');
+    },
+    checkText: function checkText(hasText) {
+      this.hasText = hasText;
     }
   },
   created: function created() {
@@ -92162,6 +92177,11 @@ var render = function () {
                           label: option.id,
                           name: "option_" + question.id,
                         },
+                        on: {
+                          change: function ($event) {
+                            return _vm.checkText(!!option.has_text)
+                          },
+                        },
                         model: {
                           value: _vm.selected[idx].selected,
                           callback: function ($$v) {
@@ -92173,9 +92193,19 @@ var render = function () {
                       [_vm._v(_vm._s(option.title) + "\n          ")]
                     ),
                     _vm._v(" "),
-                    option.has_text &&
+                    _vm.hasText &&
                     _vm.selected[_vm.current].selected == option.id
-                      ? _c("el-input", { attrs: { type: "textarea" } })
+                      ? _c("el-input", {
+                          staticClass: "mb-3",
+                          attrs: { type: "textarea" },
+                          model: {
+                            value: _vm.selected[idx].text,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.selected[idx], "text", $$v)
+                            },
+                            expression: "selected[idx].text",
+                          },
+                        })
                       : _vm._e(),
                   ],
                   1
