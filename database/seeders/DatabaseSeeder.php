@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             QuestionSeeder::class,
             OptionSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

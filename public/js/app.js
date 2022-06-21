@@ -7104,7 +7104,7 @@ __webpack_require__.r(__webpack_exports__);
     getQuestions: function getQuestions() {
       var _this = this;
 
-      axios.get('/api/question').then(function (response) {
+      axios.get('/api/quiz').then(function (response) {
         _this.questions = response.data.data;
         _this.selected = response.data.data.map(function (_ref) {
           var id = _ref.id;
@@ -7148,7 +7148,19 @@ __webpack_require__.r(__webpack_exports__);
      * Окончание опроса
      */
     finish: function finish() {
-      console.log('done!');
+      var _this2 = this;
+
+      axios.post('/api/quiz', this.selected).then(function () {
+        _this2.$notify.success({
+          title: 'Спасибо за прохождение опроса',
+          message: 'Можете закрыть страницу'
+        });
+      })["catch"](function () {
+        _this2.$notify.error({
+          title: 'Ошибка отправки на сервер',
+          message: 'Пожалуйста повторите позднее'
+        });
+      });
     },
 
     /**

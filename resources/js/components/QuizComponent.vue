@@ -60,7 +60,7 @@
        * Запрос вопрос с вариантами ответа через api
        */
       getQuestions() {
-        axios.get('/api/question')
+        axios.get('/api/quiz')
           .then((response) => {
             this.questions = response.data.data;
             this.selected = response.data.data.map(({id}) => ({
@@ -104,7 +104,19 @@
        * Окончание опроса
        */
       finish: function () {
-        console.log('done!');
+        axios.post('/api/quiz', this.selected)
+          .then(() => {
+            this.$notify.success({
+              title: 'Спасибо за прохождение опроса',
+              message: 'Можете закрыть страницу'
+            });
+          })
+          .catch(() => {
+            this.$notify.error({
+              title: 'Ошибка отправки на сервер',
+              message: 'Пожалуйста повторите позднее'
+            });
+          });
       },
 
       /**
