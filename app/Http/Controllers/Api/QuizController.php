@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redis;
 
 class QuizController extends Controller
 {
@@ -17,8 +18,16 @@ class QuizController extends Controller
      */
     public function index()
     {
+        // Обработка отказа бд
+        try {
+            $data = Question::all()->load('options'); // Получаем данные из бд
+            Redis::set('quiz:questions', $data);  // Если удалось получить, сохраняем в кэш редиса
+        } catch (\Illuminate\Database\QueryException $e) {
+            $data = Redis::get('quiz:questions'); // Если не удалось получить данные из бд, получаем из редиса
+        }
+
         return response()->json([
-            'data' => Question::all()->load('options')
+            'data' => $data
         ], Response::HTTP_OK);
     }
 
