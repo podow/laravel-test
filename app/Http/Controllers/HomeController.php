@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\UserOption;
 
 class HomeController extends Controller
 {
@@ -17,12 +17,20 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Отображение ответов сгруппированных по дате
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('home');
+        $data = UserOption::all()->load([
+            'user',
+            'question',
+            'option'
+        ])->groupBy('created_at');
+
+        return view('home', [
+            'data' => $data
+        ]);
     }
 }
