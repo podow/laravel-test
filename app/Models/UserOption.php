@@ -16,17 +16,17 @@ class UserOption extends Model
         'text',
     ];
 
-    public function getQuestion()
+    public function question()
     {
         return $this->hasOne(Question::class, 'id', 'question_id');
     }
 
-    public function getOption()
+    public function option()
     {
         return $this->hasOne(Option::class, 'id', 'option_id');
     }
 
-    public function getUser()
+    public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
